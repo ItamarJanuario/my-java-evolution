@@ -2,16 +2,12 @@ package fundamentos.dinamicas;
 import java.time.LocalDate;
 
 public class Conta {
-    Integer numeroConta;
-    Integer numeroAgencia;
-    String nome;
-    LocalDate date;
-    Boolean cancelada = false;
-    /*
-    SE EU NAO INSTANCIAR UM NUMERO 0.0 PARA O SALDO VOU FORÇAR UM ERRO DE EXPECTION POIS DOUBLE EM
-    WRAPPERS ELE SEMPRE VA INICIALIZAR CONTENDO NULL
-    */
-    Double saldo = 0d;
+    private Integer numeroConta;
+    private Integer numeroAgencia;
+    private String nome;
+    private LocalDate date;
+    private boolean cancelada;
+    private Double saldo = 0d;
 
     public Double getSaldo() {
         return saldo;
@@ -41,8 +37,9 @@ public class Conta {
       }
     }
 
-//    public Boolean cancelarConta(String justificativa) {
-//    }
+    public Boolean cancelarConta(String justificativa) {
+        return false;
+    }
 
     void verifySaldo (Double Saldo) {
         if(saldo == null) {

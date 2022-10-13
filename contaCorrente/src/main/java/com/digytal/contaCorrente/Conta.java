@@ -9,63 +9,75 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Conta {
+    Cliente cliente;
     Integer numeroConta;
     Integer numeroAgencia;
     String nome;
     Double saldo = 0.0;
     ArrayList<Extrato> extrato = new ArrayList<Extrato>();
+
+    public Conta(Cliente cliente, Integer numeroConta, Integer numeroAgencia) {
+        this.cliente = cliente;
+        this.numeroConta = numeroConta;
+        this.numeroAgencia = numeroAgencia;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
     public Double getSaldo(){
         return saldo;
     }
 
-    public void depositar(Double valor) throws ValorIncorretoException {
+    public void depositar(Double valor) {
         validarSaldoMaiorQueZero(valor);
         saldo += valor;
         System.out.println("Deposito conlcuido com sucesso.");
-        inserindoExtrato("Deposito", valor);
+        inserindoExtrato(TipoOperacao.DEBITO,"Deposito", valor);
     }
 
-    public Double sacar(Double valor) throws ValorIncorretoException {
+    public Double sacar(Double valor){
         valorMaiorQueSaldo(valor);
         saldo -= valor;
-        inserindoExtrato("Saque", valor);
+        inserindoExtrato(TipoOperacao.CREDITO,"Saque", valor);
         return valor;
     }
 
-    public void transferir(Double valor, Conta contaDestino) throws ValorIncorretoException, MesmaContaException {
+    public void transferir(Double valor, Conta contaDestino){
         valorMaiorQueSaldo(valor);
         validarContaDestino(contaDestino);
         VerificandoConta(contaDestino);
-            System.out.println("conta - > " + this.numeroConta + " está transferindo para - > " + contaDestino.numeroConta);
-            contaDestino.saldo += valor;
-            saldo -= valor;
-            inserindoExtrato("Transferencia", valor);
+        System.out.println("conta - > " + this.numeroConta + " está transferindo para - > " + contaDestino.numeroConta);
+        contaDestino.saldo += valor;
+        saldo -= valor;
+        inserindoExtrato(TipoOperacao.TRANSFERENCIA,"Transferencia", valor);
     }
 
-    public boolean cancelarConta(String justificativa) throws JustificativaException{
+    public boolean cancelarConta(String justificativa){
         VerificandoJustificativa(justificativa);
         System.out.println("Conta cancelada com sucesso !");
         return true;
     }
 
-    public void consultarExtrato(LocalDate dataInicial, LocalDate dataFinal) throws DataException {
-        if(dataInicial.isAfter(dataFinal)) {
-            throw new DataException();
-        }
-
+    public ArrayList<Extrato> consultarExtrato(LocalDate dataInicial, LocalDate dataFinal){
+        validarData(dataInicial, dataFinal);
         for(Extrato x: extrato){
             System.out.println(x);
         }
-
-
-
+        return extrato;
     }
 
     //VALIDAÇÕES
 
-    public void valorMaiorQueSaldo(Double valor) throws ValorIncorretoException {
+    public void valorMaiorQueSaldo(Double valor){
         if(valor > saldo) {
             throw new ValorIncorretoException();
+        }
+    }
+
+    public void validarSaldoMaiorQueZero(Double valor){
+        if(valor <= 0) {
+            throw new ValorIncorretoException("[ ERROR ] O valor deve ser superior a zero");
         }
     }
 
@@ -75,26 +87,26 @@ public class Conta {
         }
     }
 
-    public void validarSaldoMaiorQueZero(Double valor) throws ValorIncorretoException {
-        if(valor <= 0) {
-            throw new ValorIncorretoException("[ ERROR ] O valor deve ser superior a zero");
-        }
-    }
-
-    public void VerificandoConta(Conta contaDestino) throws MesmaContaException {
+    public void VerificandoConta(Conta contaDestino){
         if(this.numeroConta.equals(contaDestino.numeroConta)) {
             throw new MesmaContaException();
         }
     }
 
-    public void VerificandoJustificativa(String justificativa) throws JustificativaException {
-        if(justificativa == " ") {
+    public void VerificandoJustificativa(String justificativa){
+        if(justificativa.isEmpty()) {
             throw new JustificativaException();
         }
     }
 
-    public void inserindoExtrato(String funcao, Double valor) {
-        Extrato extratoEsqueleto = new Extrato(funcao, LocalDate.now(), valor);
+    public void inserindoExtrato(TipoOperacao tipo, String descricao, Double valor) {
+        Extrato extratoEsqueleto = new Extrato(tipo, descricao, LocalDate.now(), valor);
         extrato.add(extratoEsqueleto);
+    }
+
+    public void validarData(LocalDate dataInicial, LocalDate dataFinal){
+        if(dataInicial == null || dataFinal == null || dataInicial.isAfter(dataFinal)) {
+            throw new DataException();
+        }
     }
 }

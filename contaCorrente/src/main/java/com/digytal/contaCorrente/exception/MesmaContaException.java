@@ -1,6 +1,6 @@
 package com.digytal.contaCorrente.exception;
 
-public class MesmaContaException extends Exception{
+public class MesmaContaException extends RuntimeException{
     public MesmaContaException() {
         super("[ ERROR ] Você está tentando transferir para sua própria conta !!");
     }
