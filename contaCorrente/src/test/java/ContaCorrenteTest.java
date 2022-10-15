@@ -1,4 +1,4 @@
-import com.digytal.contaCorrente.Conta;
+import com.digytal.contaCorrente.Contas.Conta;
 import com.digytal.contaCorrente.exception.DataException;
 import com.digytal.contaCorrente.exception.ValorIncorretoException;
 import org.junit.jupiter.api.Assertions;

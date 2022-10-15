@@ -1,5 +1,9 @@
-package com.digytal.contaCorrente;
+package com.digytal.contaCorrente.Contas;
 
+import com.digytal.contaCorrente.Cliente;
+import com.digytal.contaCorrente.Extrato;
+import com.digytal.contaCorrente.MotivoCancelamento;
+import com.digytal.contaCorrente.TipoOperacao;
 import com.digytal.contaCorrente.exception.DataException;
 import com.digytal.contaCorrente.exception.JustificativaException;
 import com.digytal.contaCorrente.exception.MesmaContaException;
@@ -8,18 +12,24 @@ import com.digytal.contaCorrente.exception.ValorIncorretoException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Conta {
+public abstract class Conta {
     Cliente cliente;
     Integer numeroConta;
+    String cpf;
     Integer numeroAgencia;
     String nome;
     Double saldo = 0.0;
     ArrayList<Extrato> extrato = new ArrayList<Extrato>();
+    LocalDate dataAbertura;
+    LocalDate dataCancelamento;
+    MotivoCancelamento motivoCancelamento;
+    String justificativa;
 
-    public Conta(Cliente cliente, Integer numeroConta, Integer numeroAgencia) {
+    public Conta(Cliente cliente, Integer numeroConta, Integer numeroAgencia, String cpf) {
         this.cliente = cliente;
         this.numeroConta = numeroConta;
         this.numeroAgencia = numeroAgencia;
+        this.cpf = cpf;
     }
 
     public Cliente getCliente() {
@@ -53,9 +63,11 @@ public class Conta {
         inserindoExtrato(TipoOperacao.TRANSFERENCIA,"Transferencia", valor);
     }
 
-    public boolean cancelarConta(String justificativa){
+    public boolean cancelarConta(MotivoCancelamento motivo, String justificativa){
         VerificandoJustificativa(justificativa);
         System.out.println("Conta cancelada com sucesso !");
+        this.dataCancelamento = LocalDate.now();
+        this.motivoCancelamento = motivo;
         return true;
     }
 
