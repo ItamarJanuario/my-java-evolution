@@ -10,10 +10,10 @@ public class Main {
     public static void main(String[] args) {
         LocalDate dataNascimento = LocalDate.parse("2001-07-03");
         Cliente cliente = new Cliente("Itamar", dataNascimento, "213.321.321-80");
-        ContaCorrente conta1 = new ContaCorrente(cliente, 123, 324, "123.545.678-80");
+        ContaCorrente conta1 = new ContaCorrente(cliente, 123, 324, cliente.getCpf());
 
         Cliente cliente2 = new Cliente("Sharadon", LocalDate.now(), "123.321.456-70");
-        ContaPoupanca conta2 = new ContaPoupanca(cliente2, 456, 654, "123.555.121-40");
+        ContaPoupanca conta2 = new ContaPoupanca(cliente2, 456, 654, cliente2.getCpf());
 
         LocalDate dataInical = LocalDate.now();
         LocalDate dataFinal = dataInical.plusMonths(1);
